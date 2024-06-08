@@ -1,11 +1,7 @@
 package com.group.nice.restaurantapi.models;
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.*;
@@ -16,19 +12,9 @@ import lombok.*;
 @Data
 @SQLDelete(sql = "UPDATE foods SET deleted_at = CURRENT_TIMESTAMP() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class Food implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
-    @Column(name = "created_at")
-    @CreationTimestamp
-    protected Date createdAt;
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    protected Date updatedAt;
-    @Column(name = "deleted_at")
-    protected Date deletedAt;
+public class Food extends BaseEntity {
     @Column(name = "name")
     protected String name;
     @Column(name = "description")

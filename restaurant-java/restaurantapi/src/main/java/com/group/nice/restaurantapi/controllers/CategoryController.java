@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.group.nice.restaurantapi.models.Category;
+import com.group.nice.restaurantapi.dtos.CategoryDTO;
 import com.group.nice.restaurantapi.services.ICategoryService;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/categories")
 public class CategoryController {
     @Autowired
     private ICategoryService iCategoryService;
@@ -27,11 +26,11 @@ public class CategoryController {
         return "Welcome to the Categories API!";
     }
     @PostMapping("/add")
-    public Category addCategory(@RequestBody Category category) {
+    public CategoryDTO addCategory(@RequestBody CategoryDTO category) {
         return iCategoryService.addCategory(category);
     }
     @PutMapping("/update/{id}")
-    public Category updateCategory(@PathVariable("id") Long id, @RequestBody Category category) {
+    public CategoryDTO updateCategory(@PathVariable("id") Long id, @RequestBody CategoryDTO category) {
         return iCategoryService.updateCategory(id, category);
     }
     @DeleteMapping("/delete/{id}")
@@ -39,11 +38,11 @@ public class CategoryController {
         return iCategoryService.deleteCategory(id);
     }
     @GetMapping("/all")
-    public List<Category> getAllCategories() {
+    public List<CategoryDTO> getAllCategories() {
         return iCategoryService.getAllCategories();
     }
     @GetMapping("/{id}")
-    public Category getCategory(@PathVariable("id") Long id) {
+    public CategoryDTO getCategory(@PathVariable("id") Long id) {
         return iCategoryService.getCategory(id);
     }
 }

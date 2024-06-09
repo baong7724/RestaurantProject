@@ -245,14 +245,8 @@ public class FoodServiceImpl implements IFoodService{
             foodDTO.setOrigin(origin);
             foodDTO.setIngredients(ingredients);
             
-            List<String> imageUrls = imageService.getURLFoodImages(food.getId());
-            List<ImageDTO> images = new ArrayList<>();
-            for (String url : imageUrls) {
-                ImageDTO imageDTO = new ImageDTO();
-                imageDTO.setUrl(url);
-                images.add(imageDTO);
-            }
-            foodDTO.setImages(images);
+            Collection<ImageDTO> imgs = imageService.getFoodImages(food.getId());
+            foodDTO.setImages(imgs);
         
             double averageRating = food.getReviews().stream().mapToInt(Review::getRating).average().orElse(0.0);
             foodDTO.setRating(averageRating);

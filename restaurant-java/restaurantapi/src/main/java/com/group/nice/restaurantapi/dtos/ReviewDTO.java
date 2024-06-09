@@ -8,6 +8,6 @@ public class ReviewDTO {
     private long id;
     private FoodDTO food;
     private UserBaseDTO user;
-    private double rating;
+    private int rating;
     private String comment;
 }

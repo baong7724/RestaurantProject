@@ -1,6 +1,5 @@
-package com.group.nice.restaurantapi.services;
+package com.group.nice.restaurantapi.services.category;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

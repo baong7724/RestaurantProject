@@ -14,6 +14,7 @@ import lombok.*;
 @Where(clause = "deleted_at IS NULL")
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
+@NoArgsConstructor
 public class Food extends BaseEntity {
     @Column(name = "name")
     protected String name;
@@ -37,7 +38,6 @@ public class Food extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     protected Collection<User> users;
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "review_id", referencedColumnName = "id")
+    @OneToMany(mappedBy = "food")
     protected Collection<Review> reviews;
 }

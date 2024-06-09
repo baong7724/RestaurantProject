@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.group.nice.restaurantapi.dtos.CategoryDTO;
-import com.group.nice.restaurantapi.services.ICategoryService;
+import com.group.nice.restaurantapi.services.category.ICategoryService;
 
 @RestController
 @RequestMapping("/categories")
@@ -21,10 +21,6 @@ public class CategoryController {
     @Autowired
     private ICategoryService iCategoryService;
     
-    @GetMapping("/")
-    String home() {
-        return "Welcome to the Categories API!";
-    }
     @PostMapping("/add")
     public CategoryDTO addCategory(@RequestBody CategoryDTO category) {
         return iCategoryService.addCategory(category);

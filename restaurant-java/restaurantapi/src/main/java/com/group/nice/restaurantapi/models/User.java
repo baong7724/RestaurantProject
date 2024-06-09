@@ -28,4 +28,6 @@ public class User extends BaseEntity {
     protected String authId;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
     protected Collection<Food> foods;
+    @OneToMany(mappedBy = "user")
+    protected Collection<Review> reviews;
 }

@@ -17,6 +17,8 @@ import lombok.*;
 public class Image extends BaseEntity {
     @Column(name = "url")
     protected String url;
+    @Column(name = "is_main")
+    protected boolean isMain;
     @ManyToOne
     @JoinColumn(name = "food_id", referencedColumnName = "id")
     protected Food food;

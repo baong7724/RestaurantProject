@@ -15,11 +15,11 @@ import lombok.*;
 @Where(clause = "deleted_at IS NULL")
 @EqualsAndHashCode(callSuper = false)
 public class Review extends BaseEntity {
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     protected User user;
-    @OneToOne
-    @JoinColumn(name = "food_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "food_id")
     protected Food food;
     @Column(name = "rating")
     protected int rating;

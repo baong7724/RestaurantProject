@@ -19,6 +19,8 @@ public class FoodServiceImpl implements IFoodService{
     private CategoryRepository categoryRepository;
     @Autowired
     private IImageService imageService;
+    @Autowired
+    private ImageReopsitory imageRepository;
     
 
     @Override
@@ -54,19 +56,20 @@ public class FoodServiceImpl implements IFoodService{
 
             food.setCategories(categoriesForFood);
         }
-
+        foodRepository.save(food);
         if (foodDTO.getImages() != null && !foodDTO.getImages().isEmpty()) {
             imageService.addFoodImages(food.getId(), foodDTO.getImages());
-            List<String> imageUrls = imageService.getFoodImages(food.getId());
-            Collection<Image> images = new ArrayList<>();
-            for (String url : imageUrls) {
-                Image image = new Image();
-                image.setUrl(url);
-                image.setFood(food);
-                images.add(image);
-            }
-            food.setImages(images);
         }
+        Collection<ImageDTO> imgs = imageService.getFoodImages(food.getId());
+        List<Image> images = new ArrayList<>();
+        for (ImageDTO img : imgs) {
+            Image image = new Image();
+            image.setUrl(img.getUrl());
+            image.setMain(img.isMain());
+            image.setFood(food);
+            images.add(image);
+        }
+        food.setImages(images);
         foodRepository.save(food);
         return new FoodDTO(
             food.getId(),
@@ -74,7 +77,7 @@ public class FoodServiceImpl implements IFoodService{
             food.getDescription(),
             food.getPrice(),
             (categoriesForFood != null) ? foodDTO.getCategories() : null,
-            (food.getImages() != null) ? foodDTO.getImages() : null,
+            (food.getImages() != null) ?  imgs: null,
             0.0,
             origin,
             ingredients,
@@ -119,11 +122,12 @@ public class FoodServiceImpl implements IFoodService{
     
         if (foodDTO.getImages() != null && !foodDTO.getImages().isEmpty()) {
             imageService.addFoodImages(food.getId(), foodDTO.getImages());
-            List<String> imageUrls = imageService.getFoodImages(food.getId());
+            List<String> imageUrls = imageService.getURLFoodImages(food.getId());
             Collection<Image> newImages = new ArrayList<>();
             for (String url : imageUrls) {
                 Image image = new Image();
                 image.setUrl(url);
+                image.setMain(image.isMain());
                 image.setFood(food);
                 newImages.add(image);
             }
@@ -181,14 +185,8 @@ public class FoodServiceImpl implements IFoodService{
         foodDTO.setOrigin(origin);
         foodDTO.setIngredients(ingredients);
         
-        List<String> imageUrls = imageService.getFoodImages(id);
-        List<ImageDTO> images = new ArrayList<>();
-        for (String url : imageUrls) {
-            ImageDTO imageDTO = new ImageDTO();
-            imageDTO.setUrl(url);
-            images.add(imageDTO);
-        }
-        foodDTO.setImages(images);
+        Collection<ImageDTO> imgs = imageService.getFoodImages(food.getId());
+        foodDTO.setImages(imgs);
     
         double averageRating = food.getReviews().stream().mapToInt(Review::getRating).average().orElse(0.0);
         foodDTO.setRating(averageRating);
@@ -247,7 +245,7 @@ public class FoodServiceImpl implements IFoodService{
             foodDTO.setOrigin(origin);
             foodDTO.setIngredients(ingredients);
             
-            List<String> imageUrls = imageService.getFoodImages(food.getId());
+            List<String> imageUrls = imageService.getURLFoodImages(food.getId());
             List<ImageDTO> images = new ArrayList<>();
             for (String url : imageUrls) {
                 ImageDTO imageDTO = new ImageDTO();
@@ -296,7 +294,7 @@ public class FoodServiceImpl implements IFoodService{
             popularFoodDTO.setFoodPrice(food.getPrice());
             popularFoodDTO.setFoodRating(averageRating);
 
-            List<String> imageUrls = imageService.getFoodImages(food.getId());
+            List<String> imageUrls = imageService.getURLFoodImages(food.getId());
             if (!imageUrls.isEmpty()) {
                 popularFoodDTO.setFoodImage(imageUrls.get(0));
             } else {

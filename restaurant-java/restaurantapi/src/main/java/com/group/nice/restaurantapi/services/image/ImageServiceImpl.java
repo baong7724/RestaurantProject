@@ -36,6 +36,7 @@ public class ImageServiceImpl implements IImageService {
         imageRepository.saveAll(imagesList);
         food.setImages(imagesList);
         foodRepository.save(food);
+        imagesList.forEach(image -> image.setId(image.getId()));
     }
     @Override
     public void deleteFoodImage(long foodId, long imageId) {
@@ -49,12 +50,26 @@ public class ImageServiceImpl implements IImageService {
         imageRepository.save(image);
     }
     @Override
-    public List<String> getFoodImages(long foodId) {
+    public List<String> getURLFoodImages(long foodId) {
         Food food = foodRepository.findById(foodId)
                 .orElseThrow(() -> new RuntimeException("Food not found with id: " + foodId));
         List<String> images = new ArrayList<>();
         for (Image image : food.getImages()) {
             images.add(image.getUrl());
+        }
+        return images;
+    }
+    @Override
+    public Collection<ImageDTO> getFoodImages(long foodId) {
+        Food food = foodRepository.findById(foodId)
+                .orElseThrow(() -> new RuntimeException("Food not found with id: " + foodId));
+        Collection<ImageDTO> images = new ArrayList<>();
+        for (Image image : food.getImages()) {
+            ImageDTO imageDTO = new ImageDTO();
+            imageDTO.setId(image.getId());
+            imageDTO.setUrl(image.getUrl());
+            imageDTO.setMain(image.isMain());
+            images.add(imageDTO);
         }
         return images;
     }

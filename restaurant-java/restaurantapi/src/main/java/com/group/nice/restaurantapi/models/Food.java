@@ -29,7 +29,7 @@ public class Food extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     protected Collection<Category> categories;
-    @OneToMany(mappedBy = "food")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "food")
     protected Collection<Image> images;
     @ManyToMany
     @JoinTable(

@@ -19,7 +19,7 @@ public class Image extends BaseEntity {
     protected String url;
     @Column(name = "is_main")
     protected boolean isMain;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "food_id", referencedColumnName = "id")
     protected Food food;
 }

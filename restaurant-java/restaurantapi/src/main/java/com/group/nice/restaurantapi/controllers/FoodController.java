@@ -11,6 +11,7 @@ import com.group.nice.restaurantapi.dtos.PostFoodsAdd;
 import com.group.nice.restaurantapi.services.food.IFoodService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/foods")
 public class FoodController {
     @Autowired

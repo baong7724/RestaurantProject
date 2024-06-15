@@ -4,13 +4,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Image } from './entity/image.entity';
 import { ImagesService } from './images.service';
 import { Food } from 'src/foods/entity/food.entity';
+import { Category } from 'src/categories/entity/category.entity';
+import { Review } from 'src/reviews/entity/review.entity';
+import { User } from 'src/users/entity/user.entity';
+import { FoodsService } from 'src/foods/foods.service';
+import { ReviewsService } from 'src/reviews/reviews.service';
+import { CategoriesService } from 'src/categories/categories.service';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Image, Food]),
+    TypeOrmModule.forFeature([Food, Category, Image, Review, User]),
   ],
   controllers: [ImagesController],
-  providers: [ImagesService],
-  exports: [ImagesService],
+  providers: [FoodsService, ImagesService, ReviewsService, CategoriesService, UsersService],
+  exports: [FoodsService, ImagesService, ReviewsService, CategoriesService, UsersService],
 })
 export class ImagesModule {}

@@ -13,7 +13,7 @@ export class ImagesService {
         @InjectRepository(Food) private readonly foodRepository: Repository<Food>,
     ) {}
 
-    async createImage(id: number, createImagesDTO: ImageDTO[]): Promise<void> {
+    async createImages(id: number, createImagesDTO: ImageDTO[]): Promise<void> {
         const food = await this.foodRepository.findOne({
             where: { id },
         });

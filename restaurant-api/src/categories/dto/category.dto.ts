@@ -8,17 +8,17 @@ export class CategoryDTO {
     id?: number;
 
     @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
-    name: string;
+    @IsOptional()
+    @ApiPropertyOptional()
+    name?: string;
 
     @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
+    @IsOptional()
+    @ApiPropertyOptional()
     colorCode?: string;
 
     @IsString()
-    @IsNotEmpty()
-    @ApiProperty()
+    @IsOptional()
+    @ApiPropertyOptional()
     tag?: string;
 }

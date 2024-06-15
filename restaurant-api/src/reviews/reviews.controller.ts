@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, Scope } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorator/roles.decorator';
 import { Role } from 'src/common/enum/roles.enum';
 import { ReviewDto } from './dto/review.dto';
@@ -11,6 +11,7 @@ import { HttpMessage, HttpStatusCode } from 'src/common/enum/httpstatus.enum';
     path: 'reviews',
     scope: Scope.REQUEST,
 })
+@ApiTags('reviews')
 export class ReviewsController {
     constructor(
         private readonly reviewsService: ReviewsService,

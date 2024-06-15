@@ -27,7 +27,7 @@ export class ImagesController {
         @Param('foodId') foodId: number,
         @Body() createImagesDTO: ImageDTO[]): Promise<void> {
         try {
-            await this.imagesService.createImage(foodId, createImagesDTO);
+            await this.imagesService.createImages(foodId, createImagesDTO);
         } catch (err) {
             throw new HttpException(err.message, err.status);
         }
@@ -63,6 +63,7 @@ export class ImagesController {
     }
 
     @Get(':foodId')
+    @ApiBearerAuth('JWT-auth')
     @Public()
     async getImages(
         @Param('foodId') foodId: number): Promise<ResponseData<ImageDTO>> {
@@ -78,6 +79,7 @@ export class ImagesController {
     }
 
     @Get(':foodId/:imageId')
+    @ApiBearerAuth('JWT-auth')
     @Public()
     async getImage(
         @Param('foodId') foodId: number,

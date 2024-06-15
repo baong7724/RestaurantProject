@@ -12,10 +12,10 @@ export class ReviewsService {
     constructor(
         @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
         @InjectRepository(Food) private readonly foodRepository: Repository<Food>,
-        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        @InjectRepository(User) private readonly userRepository: Repository<User>
     ) {}
 
-    async getReviewsByFoodId(foodId: number): Promise<ReviewDto[]> {
+    async getReviews(foodId: number): Promise<ReviewDto[]> {
         const food = await this.foodRepository.findOne(
             {
                 where: { id: foodId },
@@ -134,5 +134,23 @@ export class ReviewsService {
         }
         const reviewDtos = user.reviews.map(review => plainToClass(ReviewDto, review));
         return reviewDtos;
+    }
+
+    async calculateAverageRating(foodId: number): Promise<number> {
+        const food = await this.foodRepository.findOne(
+            {
+                where: { id: foodId },
+                relations: ['reviews'],
+            }
+        )
+        if (!food) {
+            throw new HttpException('Food not found', HttpStatus.NOT_FOUND);
+        }
+        if(!food.reviews) {
+            return 0;
+        }
+        const totalRating = food.reviews.reduce((acc, review) => acc + review.rating, 0);
+        const averrageRating = food.reviews.length ? totalRating / food.reviews.length : 0;
+        return averrageRating;
     }
 }

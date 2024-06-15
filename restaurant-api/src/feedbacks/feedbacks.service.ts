@@ -14,6 +14,9 @@ export class FeedbacksService {
     ){}
 
     async createFeedback(feedback: FeedbackDto): Promise<FeedbackDto> {
+        if (!feedback.email || !feedback.name || !feedback.message) {
+            throw new HttpException('Email, name and message are required', HttpStatusCode.BAD_REQUEST);
+        }
         let f = new Feedback();
         f.email = feedback.email;
         f.name = feedback.name;

@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
 import { CategoryDTO } from "src/categories/dto/category.dto";
 import { IngredientDTO } from "src/categories/dto/ingredient.dto";
 import { OriginDto } from "src/categories/dto/origin.dto";
@@ -10,50 +11,60 @@ export class FoodBaseDto {
     @IsNumber()
     @IsOptional()
     @ApiPropertyOptional()
-    id: number;
+    id?: number;
 
     @IsString()
     @IsOptional()
     @ApiPropertyOptional()
-    name: string;
+    name?: string;
 
     @IsString()
     @IsOptional()
     @ApiPropertyOptional()
-    description: string;
+    description?: string;
 
     @IsNumber()
     @IsOptional()
     @ApiPropertyOptional()
-    price: number;
+    price?: number;
 
     @IsNumber()
     @IsOptional()
     @ApiPropertyOptional()
-    rating: number;
+    rating?: number;
     
     @IsArray()
     @IsOptional()
-    @ApiPropertyOptional()
-    categories: CategoryDTO[];
+    @ValidateNested({ each: true })
+    @Type(() => CategoryDTO)
+    @ApiPropertyOptional({ type: [CategoryDTO] })
+    categories?: CategoryDTO[];
 
     @IsArray()
     @IsOptional()
-    @ApiPropertyOptional()
-    images: ImageDTO[];
+    @ValidateNested({ each: true })
+    @Type(() => ImageDTO)
+    @ApiPropertyOptional({ type: [ImageDTO] })
+    images?: ImageDTO[];
 
     @IsArray()
     @IsOptional()
-    @ApiPropertyOptional()
-    ingredients: IngredientDTO[];
+    @ValidateNested({ each: true })
+    @Type(() => IngredientDTO)
+    @ApiPropertyOptional({ type: [IngredientDTO] })
+    ingredients?: IngredientDTO[];
 
     @IsObject()
     @IsOptional()
-    @ApiPropertyOptional()
-    origin: OriginDto;
+    @ValidateNested({ each: true })
+    @Type(() => OriginDto)
+    @ApiPropertyOptional({ type: OriginDto })
+    origin?: OriginDto;
 
     @IsArray()
     @IsOptional()
-    @ApiPropertyOptional()
-    reviews: ReviewDto[];
+    @ValidateNested({ each: true })
+    @Type(() => ReviewDto)
+    @ApiPropertyOptional({ type: ReviewDto })
+    reviews?: ReviewDto[];
 }

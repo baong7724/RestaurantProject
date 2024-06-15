@@ -32,8 +32,6 @@ export class User extends Base{
         eager: true
     })
     favoriteFoods: Food[];
-    @OneToMany(() => Review, (review) => review.user, {
-        eager: true
-    })
+    @OneToMany(() => Review, (review) => review.user)
     reviews: Review[];
 }

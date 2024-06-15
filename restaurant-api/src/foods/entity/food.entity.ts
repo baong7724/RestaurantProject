@@ -48,8 +48,6 @@ export class Food extends Base{
         }
     })
     users: User[];
-    @OneToMany(() => Review, (review) => review.food, {
-        eager: true
-    })
+    @OneToMany(() => Review, (review) => review.food)
     reviews: Review[];
 }

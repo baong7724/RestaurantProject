@@ -5,13 +5,13 @@ import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 
 @Entity('reviews')
 export class Review extends Base{
-    @ManyToOne(() => User, (user) => user.reviews)
+    @ManyToOne(() => User, (user) => user.reviews, { eager: true })
     @JoinColumn({
         name: 'user_id',
         referencedColumnName: 'id'
     })
     user: User;
-    @ManyToOne(() => Food, (food) => food.reviews)
+    @ManyToOne(() => Food, (food) => food.reviews, { eager: true })
     @JoinColumn({
         name: 'food_id',
         referencedColumnName: 'id'

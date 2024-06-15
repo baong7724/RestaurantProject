@@ -1,25 +1,35 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Expose } from "class-transformer";
 import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class ReviewDto{
     @IsNumber()
     @IsOptional()
     @ApiPropertyOptional()
-    id: number
+    id?: number
 
     @IsNumber()
-    @ApiProperty()
-    userId: number
-
-    @IsNumber()
-    @ApiProperty()
-    foodId: number
-
-    @IsNumber()
-    @ApiProperty()
-    rating: number
+    @IsOptional()
+    @ApiPropertyOptional()
+    userId?: number
 
     @IsString()
-    @ApiProperty()
-    comment: string
+    @IsOptional()
+    @ApiPropertyOptional()
+    username?: string
+
+    @IsNumber()
+    @IsOptional()
+    @ApiPropertyOptional()
+    foodId?: number
+
+    @IsNumber()
+    @IsOptional()
+    @ApiPropertyOptional()
+    rating?: number
+
+    @IsString()
+    @IsOptional()
+    @ApiPropertyOptional()
+    comment?: string
 }

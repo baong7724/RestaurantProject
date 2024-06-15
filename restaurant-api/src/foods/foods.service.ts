@@ -114,7 +114,13 @@ export class FoodsService {
         const foodDto = new FoodBaseDto();
         const categories: CategoryDTO[] = [];
         let origin: OriginDto | undefined = undefined;
+        const reviews: ReviewDto[] = [];
+        const images: ImageDTO[] = [];
         const ingredients: IngredientDTO[] = [];
+        const totalRating = food.reviews.reduce((acc, review) => acc + review.rating, 0);
+        const averrageRating = food.reviews.length ? totalRating / food.reviews.length : 0;
+
+        foodDto.rating = averrageRating;
         foodDto.id = food.id;
         foodDto.name = food.name;
         foodDto.description = food.description;
@@ -140,15 +146,31 @@ export class FoodsService {
         foodDto.categories = categories;
         foodDto.origin = origin;
         foodDto.ingredients = ingredients;
-        foodDto.images = food.images.map(image => plainToClass(ImageDTO, image));
-        foodDto.reviews = food.reviews.map(review => plainToClass(ReviewDto, review));
+        food.images.map(image => {
+            images.push({
+                id: image.id,
+                url: image.url,
+                isMain: image.isMain
+            });
+        });
+        food.reviews.map(review => {
+            reviews.push({
+                id: review.id,
+                userId: review.user.id,
+                username: review.user.username,
+                rating: review.rating,
+                comment: review.comment
+            });
+        });
+        foodDto.images = images;
+        foodDto.reviews = reviews;
         return foodDto;
     }
 
     async getFoods(): Promise<FoodBaseDto[]>{
         const foods = await this.foodRepository.find({
             where: {deletedAt: null},
-            relations: ['categories', 'images']
+            relations: ['categories', 'images', 'reviews', 'users']
         });
 
         return foods.map(food => {
@@ -160,7 +182,7 @@ export class FoodsService {
     async getFood(id: number): Promise<FoodBaseDto>{
         const food = await this.foodRepository.findOne({
             where: {id, deletedAt: null},
-            relations: ['categories', 'images', 'reviews']
+            relations: ['categories', 'images', 'reviews', 'users']
         });
         if (!food){
             throw new HttpException('Food not found', HttpStatusCode.NOT_FOUND);
@@ -178,7 +200,7 @@ export class FoodsService {
     async getFoodsByCategory(categoryId: number): Promise<FoodBaseDto[]>{
         const foods = await this.foodRepository.find({
             where: {deletedAt: null, categories: {id: categoryId}},
-            relations: ['categories', 'images']
+            relations: ['categories', 'images', 'reviews', 'users']
         });
         return foods.map(food => {
             let foodDto = this.foodBase(food);

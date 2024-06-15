@@ -21,7 +21,6 @@ export class ImagesController {
     ){}
 
     @Post(':foodId')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async createImages(
         @Param('foodId') foodId: number,
@@ -34,7 +33,6 @@ export class ImagesController {
     }
 
     @Delete(':foodId/:imageId')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async deleteImage(
         @Param('foodId') foodId: number,
@@ -48,7 +46,6 @@ export class ImagesController {
     }
 
     @Put(':foodId/:imageId')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async updateImage(
         @Param('foodId') foodId: number,
@@ -63,7 +60,6 @@ export class ImagesController {
     }
 
     @Get(':foodId')
-    @ApiBearerAuth('JWT-auth')
     @Public()
     async getImages(
         @Param('foodId') foodId: number): Promise<ResponseData<ImageDTO>> {
@@ -79,7 +75,6 @@ export class ImagesController {
     }
 
     @Get(':foodId/:imageId')
-    @ApiBearerAuth('JWT-auth')
     @Public()
     async getImage(
         @Param('foodId') foodId: number,

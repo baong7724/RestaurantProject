@@ -90,9 +90,9 @@ export class FoodsService {
         if(foodDto.images){
             await this.imagesService.createImages(food.id, foodDto.images);
         }
-        food = await this.foodRepository.save(food);
-        foodDto.id = food.id;
-        return foodDto;
+        await this.foodRepository.save(food);
+        let f = plainToClass(FoodDto, food);
+        return f
     }
 
     async deleteFood(id: number): Promise<boolean>{

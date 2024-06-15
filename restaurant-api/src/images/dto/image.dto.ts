@@ -6,17 +6,17 @@ export class ImageDTO {
     @IsNumber()
     @IsOptional()
     @ApiPropertyOptional()
-    id?: number;
+    id: number;
 
     @IsString()
     @IsOptional()
     @ApiPropertyOptional()
-    url?: string;
+    url: string;
 
     @IsBoolean()
     @IsOptional()
     @ApiPropertyOptional()
     @Expose({name: 'is_main'})
     @Transform(({ value }) => value !== undefined ? value : 'false')
-    isMain?: boolean;
+    isMain: boolean;
 }

@@ -24,7 +24,6 @@ export class FoodsController {
     ){}
 
     @Post()
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async createFood(@Body() createFoodDTO: FoodDto): Promise<ResponseData<FoodDto>>{
         try{
@@ -39,7 +38,6 @@ export class FoodsController {
     }
 
     @Put(':id')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async updateFood(
         @Param('id') id: number,
@@ -56,7 +54,6 @@ export class FoodsController {
     }
 
     @Put(':foodId/images/:imageId')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async updateImage(
         @Param('foodId') foodId: number,
@@ -70,7 +67,6 @@ export class FoodsController {
     }
 
     @Get(':foodId/reviews')
-    @ApiBearerAuth('JWT-auth')
     @Public()
     async getReviews(@Param('foodId') foodId: number){
         try{
@@ -84,5 +80,60 @@ export class FoodsController {
         }
     }
 
+    @Get('all')
+    @Public()
+    async getAllFoods(){
+        try{
+            const foods = await this.foodsService.getFoods();
+            if(foods){
+                return new ResponseData(foods, HttpStatusCode.OK, HttpMessage.OK);
+            }
+            return new ResponseData(null, HttpStatusCode.BAD_REQUEST, HttpMessage.BAD_REQUEST);
+        }catch(e){
+            throw new HttpException(e.message, e.status);
+        }
+    }
+
+    @Get('/popluar/:limit')
+    @Public()
+    async getPopularFoods(@Param('limit') limit: number){
+        try{
+            const foods = await this.foodsService.getPopularFoods(limit);
+            if(foods){
+                return new ResponseData(foods, HttpStatusCode.OK, HttpMessage.OK);
+            }
+            return new ResponseData(null, HttpStatusCode.BAD_REQUEST, HttpMessage.BAD_REQUEST);
+        }catch(e){
+            throw new HttpException(e.message, e.status);
+        }
+    }
+
+    @Get(':id')
+    @Public()
+    async getFood(@Param('id') id: number){
+        try{
+            const food = await this.foodsService.getFood(id);
+            if(food){
+                return new ResponseData(food, HttpStatusCode.OK, HttpMessage.OK);
+            }
+            return new ResponseData(null, HttpStatusCode.BAD_REQUEST, HttpMessage.BAD_REQUEST);
+        }catch(e){
+            throw new HttpException(e.message, e.status);
+        }
+    }
+
+    @Get('category/:categoryId')
+    @Public()
+    async getFoodsByCategory(@Param('categoryId') categoryId: number){
+        try{
+            const foods = await this.foodsService.getFoodsByCategory(categoryId);
+            if(foods){
+                return new ResponseData(foods, HttpStatusCode.OK, HttpMessage.OK);
+            }
+            return new ResponseData(null, HttpStatusCode.BAD_REQUEST, HttpMessage.BAD_REQUEST);
+        }catch(e){
+            throw new HttpException(e.message, e.status);
+        }
+    }
     
 }

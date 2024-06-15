@@ -5,19 +5,13 @@ import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 
 @Entity('reviews')
 export class Review extends Base{
-    @ManyToOne(() => User, (user) => user.reviews, {
-        onDelete: 'CASCADE', 
-        onUpdate: 'CASCADE'
-    })
+    @ManyToOne(() => User, (user) => user.reviews)
     @JoinColumn({
         name: 'user_id',
         referencedColumnName: 'id'
     })
     user: User;
-    @ManyToOne(() => Food, (food) => food.reviews, {
-        onDelete: 'CASCADE', 
-        onUpdate: 'CASCADE'
-    })
+    @ManyToOne(() => Food, (food) => food.reviews)
     @JoinColumn({
         name: 'food_id',
         referencedColumnName: 'id'

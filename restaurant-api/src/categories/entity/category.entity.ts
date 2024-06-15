@@ -17,16 +17,5 @@ export class Category extends Base{
     })
     tag: string;
     @ManyToMany(() => Food, (food) => food.categories)
-    @JoinTable({
-        name: 'food_categories',
-        joinColumn: {
-            name: 'category_id',
-            referencedColumnName: 'id'
-        },
-        inverseJoinColumn: {
-            name: 'food_id',
-            referencedColumnName: 'id'
-        }
-    })
     foods: Food[];
 }

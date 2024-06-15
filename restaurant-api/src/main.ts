@@ -33,6 +33,7 @@ async function bootstrap() {
     origin: '*',
   });
   app.useGlobalPipes(new ValidationPipe({
+    validationError: { target: false },
     transform: true,
     transformOptions: {
       enableImplicitConversion: true,

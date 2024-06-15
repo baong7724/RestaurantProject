@@ -10,6 +10,8 @@ import { ImagesModule } from './images/images.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { table } from 'console';
+import path from 'path';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -26,6 +28,10 @@ import { AuthModule } from './auth/auth.module';
       database: configService.get('DB_DATABASE'),
       autoLoadEntities: true,
       synchronize: true,
+      schemaGenerator: {
+        disableForeignKeys: true,
+        createForeignKeyConstraints: true,
+      }
     }),
     inject: [ConfigService],
   }), CategoriesModule, FoodsModule, ImagesModule, ReviewsModule, UsersModule, AuthModule],

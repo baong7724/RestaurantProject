@@ -28,17 +28,14 @@ export class Food extends Base{
         inverseJoinColumn: {
             name: 'category_id',
             referencedColumnName: 'id'
-        }
+        },
     })
     categories: Category[];
     @OneToMany(()=> Image, (image) => image.food, {
         eager: true
     })
     images: Image[];
-    @ManyToMany(() => User, (user) => user.favoriteFoods, {
-        onDelete: 'CASCADE', 
-        onUpdate: 'CASCADE'
-    })
+    @ManyToMany(() => User, (user) => user.favoriteFoods)
     @JoinTable({
         name: 'user_favorite_foods',
         joinColumn: {

@@ -6,6 +6,7 @@ import { ResponseData } from 'src/common/global/responde.data';
 import { Role } from 'src/common/enum/roles.enum';
 import { Roles } from 'src/common/decorator/roles.decorator';
 import { CategoryDTO } from './dto/category.dto';
+import { Public } from 'src/common/decorator/public.decorator';
 
 @Controller({
     path: 'categories',
@@ -16,7 +17,6 @@ export class CategoriesController {
     constructor(private readonly categoryService: CategoriesService){}
 
     @Post()
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async createCategory(@Body() createCategoryDTO: CategoryDTO){
         try {
@@ -31,7 +31,6 @@ export class CategoriesController {
     }
 
     @Put(':id')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async updateCategory(
         @Param('id') id: number,
@@ -51,8 +50,7 @@ export class CategoriesController {
     }
 
     @Get('all')
-    @ApiBearerAuth('JWT-auth')
-    @Roles(Role.ADMIN)
+    @Public()
     async getAllCategories(){
         try {
             const result = await this.categoryService.getAllCategories();
@@ -66,7 +64,6 @@ export class CategoriesController {
     }
 
     @Get(':id')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async getCategoryById(@Param('id') id: number){
         try {
@@ -81,7 +78,6 @@ export class CategoriesController {
     }
 
     @Delete(':id')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.ADMIN)
     async deleteCategory(@Param('id') id: number){
         try {

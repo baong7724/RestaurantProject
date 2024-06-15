@@ -6,8 +6,9 @@ import { Food } from 'src/foods/entity/food.entity';
 import { ReviewDto } from './dto/review.dto';
 import { plainToClass } from 'class-transformer';
 import { User } from 'src/users/entity/user.entity';
-import { CategoryDTO } from '../categories/dto/category.dto';
-import { CategoriesService } from 'src/categories/categories.service';
+import { ReviewBaseDto } from './dto/review-base.dto';
+import { FoodsService } from 'src/foods/foods.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ReviewsService {
@@ -15,8 +16,25 @@ export class ReviewsService {
         @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
         @InjectRepository(Food) private readonly foodRepository: Repository<Food>,
         @InjectRepository(User) private readonly userRepository: Repository<User>,
-        private readonly categoryService: CategoriesService,
+        private readonly foodService: FoodsService,
+        private readonly userService: UsersService,
     ) {}
+
+    reviewBase(food: Food, user: User, review: Review): ReviewBaseDto {
+        const reviewBase = new ReviewBaseDto();
+        if(food){
+            reviewBase.food = this.foodService.foodBase(food);
+        }
+        if(user){
+            reviewBase.user = this.userService.userBase(user);
+        }
+        let reviewDto = new ReviewDto();
+        reviewDto.id = review.id;
+        reviewDto.rating = review.rating;
+        reviewDto.comment = review.comment;
+        reviewBase.review = reviewDto;
+        return reviewBase;
+    }
 
     async getReviews(foodId: number): Promise<ReviewDto[]> {
         const food = await this.foodRepository.findOne(
@@ -35,17 +53,17 @@ export class ReviewsService {
         food.reviews.map(review => {
             reviews.push({
                 id: review.id,
+                userId: review.user.id,
+                username: review.user.username,
+                foodId: review.food.id,
                 rating: review.rating,
                 comment: review.comment,
-                userId: review.user.id,
-                foodId: review.food.id,
-                username: review.user.username,
             })
         });
         return reviews;
     }
 
-    async createReview(foodId: number, reviewDto: ReviewDto): Promise<ReviewDto> {
+    async createReview(foodId: number, reviewDto: ReviewDto): Promise<ReviewBaseDto> {
         const food = await this.foodRepository.findOne(
             {
                 where: { id: foodId },
@@ -67,10 +85,13 @@ export class ReviewsService {
         if (reviewDto.rating < 1 || reviewDto.rating > 5) {
             throw new HttpException('Rating must be between 1 and 5', HttpStatus.BAD_REQUEST);  
         }
+        
         let review = plainToClass(Review, reviewDto);
-        review.food = food;
         review = await this.reviewRepository.save(review);
-        return plainToClass(ReviewDto, review);
+        review.food = food;
+        review.user = user;
+        await this.reviewRepository.save(review);
+        return this.reviewBase(food, user, review);
     }
 
     async deleteReview(foodId: number, userId: number): Promise<boolean> {
@@ -88,6 +109,7 @@ export class ReviewsService {
             throw new HttpException('Review not found', HttpStatus.NOT_FOUND);
         }
         review.food = null;
+        review.user = null;
         review.deletedAt = new Date();
         await this.reviewRepository.save(review);
         return true;
@@ -120,61 +142,28 @@ export class ReviewsService {
         return plainToClass(ReviewDto, review);
     }
 
-    async getReview(reviewId: number): Promise<ReviewDto> {
+    async getReview(reviewId: number): Promise<ReviewBaseDto> {
         const review = await this.reviewRepository.findOne(
             {
                 where: { id: reviewId },
+                relations: ['food', 'user'],
             }
         )
         if (!review) {
             throw new HttpException('Review not found', HttpStatus.NOT_FOUND);
         }
-        const rating = await this.calculateAverageRating(review.food.id);
-        const categorieDTOs = await this.categoryService.getCategoriesByFood(review.food.id);
-        return {
-            id: review.id,
-            user: {
-                id: review.user.id,
-                username: review.user.username,
-                role: review.user.role,
-            },
-            food: {
-                id: review.food.id,
-                name: review.food.name,
-                price: review.food.price,
-                description: review.food.description,
-                images: review.food.images.map(image => {
-                    return {
-                        id: image.id,
-                        url: image.url,
-                        isMain: image.isMain,
-                    }
-                }),
-                categories: categorieDTOs,
-                rating: rating,
-            },
-            rating: review.rating,
-            comment: review.comment,
-        }as ReviewDto;
-    }
-
-    async getReviewsByUserId(userId: number): Promise<ReviewDto[]> {
-        const user = await this.userRepository.findOne(
+        const food = await this.foodRepository.findOne(
             {
-                where: { id: userId },
+                where: { id: review.food.id },
                 relations: ['reviews'],
             }
-        )
-        if (!user) {
-            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        );
+        if (!food) {
+            throw new HttpException('Food not found', HttpStatus.NOT_FOUND);
         }
-        if(!user.reviews) {
-            return [];
-        }
-        const reviewDtos = user.reviews.map(review => plainToClass(ReviewDto, review));
-        return reviewDtos;
+        return this.reviewBase(food, review.user, review);
     }
-
+    
     async calculateAverageRating(foodId: number): Promise<number> {
         const food = await this.foodRepository.findOne(
             {

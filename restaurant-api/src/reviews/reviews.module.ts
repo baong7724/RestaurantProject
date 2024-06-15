@@ -10,15 +10,15 @@ import { UsersService } from 'src/users/users.service';
 import { Category } from 'src/categories/entity/category.entity';
 import { Image } from 'src/images/entity/image.entity';
 import { ImagesService } from 'src/images/images.service';
-import { CategoriesService } from 'src/categories/categories.service';
+import { CategoriesModule } from 'src/categories/categories.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Food, Category, Image, Review, User]),
   ],
   controllers: [ReviewsController],
-  providers: [FoodsService, ImagesService, ReviewsService, CategoriesService, UsersService],
-  exports: [FoodsService, ImagesService, ReviewsService, CategoriesService, UsersService],
+  providers: [FoodsService, ReviewsService, UsersService, ImagesService, CategoriesModule],
+  exports: [FoodsService, ReviewsService, UsersService, ImagesService, CategoriesModule],
 })
 export class ReviewsModule {}
 

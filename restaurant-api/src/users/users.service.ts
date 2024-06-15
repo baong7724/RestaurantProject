@@ -53,4 +53,13 @@ export class UsersService {
         }
         return user;
     }
+
+    userBase(user: User): UserBase {
+        const userBase = new UserBase();
+        userBase.id = user.id;
+        userBase.username = user.username;
+        userBase.email = user.email;
+        userBase.role = user.role;
+        return userBase;
+    }
 }

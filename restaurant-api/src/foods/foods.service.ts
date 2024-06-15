@@ -9,7 +9,6 @@ import { FoodDto } from './dto/food.dto';
 import { HttpStatusCode } from 'src/common/enum/httpstatus.enum';
 import { ImagesService } from 'src/images/images.service';
 import { FoodBaseDto } from './dto/food-base.dto';
-import { ReviewsService } from 'src/reviews/reviews.service';
 import { CategoryDTO } from 'src/categories/dto/category.dto';
 import { plainToClass } from 'class-transformer';
 import { ImageDTO } from 'src/images/dto/image.dto';
@@ -24,9 +23,7 @@ export class FoodsService {
         @InjectRepository(Category) private readonly categoryRepository: Repository<Category>,
         @InjectRepository(Image) private readonly imageRepository: Repository<Image>,
         @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
-        private readonly imagesService: ImagesService,
-        private readonly reviewsService: ReviewsService
-        
+        private readonly imagesService: ImagesService        
     ){}
     async createFood(foodDto: FoodDto): Promise<FoodDto>{
         if (!foodDto){

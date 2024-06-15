@@ -7,6 +7,7 @@ import { ReviewDto } from './dto/review.dto';
 import { ResponseData } from 'src/common/global/responde.data';
 import { HttpMessage, HttpStatusCode } from 'src/common/enum/httpstatus.enum';
 import { Public } from 'src/common/decorator/public.decorator';
+import { ReviewBaseDto } from './dto/review-base.dto';
 
 @Controller({
     path: 'reviews',
@@ -20,15 +21,16 @@ export class ReviewsController {
 
     @Post(':foodId')
     @Roles(Role.USER)
+    @ApiBearerAuth('JWT-auth')
     async createReview(
         @Param('foodId') foodId: number,
-        @Body() reviewDto: ReviewDto,): Promise<ResponseData<ReviewDto>> {
+        @Body() reviewDto: ReviewDto,): Promise<ResponseData<ReviewBaseDto>> {
         try{
             const review = await this.reviewsService.createReview(foodId, reviewDto);
             if(review){
-                return new ResponseData<ReviewDto>(review, HttpStatusCode.CREATED, HttpMessage.OK);
+                return new ResponseData(review, HttpStatusCode.CREATED, HttpMessage.OK);
             }
-            return new ResponseData<ReviewDto>(null, HttpStatusCode.BAD_REQUEST, HttpMessage.BAD_REQUEST);
+            return new ResponseData(null, HttpStatusCode.BAD_REQUEST, HttpMessage.BAD_REQUEST);
         } catch(e){
             throw new HttpException(e.message, e.status);
         }
@@ -70,13 +72,13 @@ export class ReviewsController {
     @Get(':reviewId')
     @Public()
     async getReview(
-        @Param('reviewId') reviewId: number): Promise<ResponseData<ReviewDto>> {
+        @Param('reviewId') reviewId: number): Promise<ResponseData<ReviewBaseDto>> {
         try{
             const review = await this.reviewsService.getReview(reviewId);
             if (review){
-                return new ResponseData<ReviewDto>(review, HttpStatusCode.OK, HttpMessage.OK);
+                return new ResponseData(review, HttpStatusCode.OK, HttpMessage.OK);
             }
-            return new ResponseData<ReviewDto>(null, HttpStatusCode.NOT_FOUND, HttpMessage.NOT_FOUND);
+            return new ResponseData(null, HttpStatusCode.NOT_FOUND, HttpMessage.NOT_FOUND);
         } catch(e){
             throw new HttpException(e.message, e.status);
         }

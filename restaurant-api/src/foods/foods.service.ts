@@ -194,7 +194,7 @@ export class FoodsService {
     async getPopularFoods(limit: number): Promise<FoodBaseDto[]>{
         const foods = await this.getFoods();
         foods.sort((a, b) => b.rating - a.rating);
-        return foods.slice(0, limit-1);
+        return foods.slice(0, limit);
     }
 
     async getFoodsByCategory(categoryId: number): Promise<FoodBaseDto[]>{

@@ -6,6 +6,7 @@ import { Role } from 'src/common/enum/roles.enum';
 import { ReviewDto } from './dto/review.dto';
 import { ResponseData } from 'src/common/global/responde.data';
 import { HttpMessage, HttpStatusCode } from 'src/common/enum/httpstatus.enum';
+import { Public } from 'src/common/decorator/public.decorator';
 
 @Controller({
     path: 'reviews',
@@ -18,7 +19,6 @@ export class ReviewsController {
     ) {}
 
     @Post(':foodId')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.USER)
     async createReview(
         @Param('foodId') foodId: number,
@@ -35,7 +35,6 @@ export class ReviewsController {
     }
 
     @Put(':foodId/:reviewId')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.USER)
     async updateReview(
         @Param('foodId') foodId: number,
@@ -53,7 +52,6 @@ export class ReviewsController {
     }
 
     @Delete(':foodId/:reviewId')
-    @ApiBearerAuth('JWT-auth')
     @Roles(Role.USER, Role.ADMIN)
     async deleteReview(
         @Param('foodId') foodId: number,
@@ -70,8 +68,7 @@ export class ReviewsController {
     }
 
     @Get(':reviewId')
-    @ApiBearerAuth('JWT-auth')
-    @Roles(Role.USER, Role.ADMIN)
+    @Public()
     async getReview(
         @Param('reviewId') reviewId: number): Promise<ResponseData<ReviewDto>> {
         try{

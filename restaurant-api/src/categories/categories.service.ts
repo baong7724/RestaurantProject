@@ -4,10 +4,14 @@ import { Category } from "./entity/category.entity";
 import { Repository } from "typeorm";
 import { ResponseData } from "src/common/global/responde.data";
 import { CategoryDTO } from "./dto/category.dto";
+import { Food } from "src/foods/entity/food.entity";
 
 @Injectable()
 export class CategoriesService{
-    constructor(@InjectRepository(Category) private readonly categoryRepository: Repository<Category>){}
+    constructor(
+        @InjectRepository(Category) private readonly categoryRepository: Repository<Category>,
+        @InjectRepository(Food) private readonly foodRepository: Repository<Food>,
+    ){}
 
     async createCategory(createCategoryDTO: CategoryDTO): Promise<CategoryDTO> {
         if (!createCategoryDTO){
@@ -47,15 +51,15 @@ export class CategoriesService{
 
     async getAllCategories(): Promise<CategoryDTO[]> {
         const categories = await this.categoryRepository.find();
-        var categoryDTOs: CategoryDTO[] = [];
-        for (let i = 0; i < categories.length; i++){
-            var categoryDTO = new CategoryDTO();
-            categoryDTO.id = categories[i].id;
-            categoryDTO.name = categories[i].name;
-            categoryDTO.colorCode = categories[i].colorCode;
-            categoryDTO.tag = categories[i].tag;
-            categoryDTOs.push(categoryDTO);
-        }
+        const categoryDTOs: CategoryDTO[] = [];
+        categories.map(category => {
+            categoryDTOs.push({
+                id: category.id,
+                name: category.name,
+                colorCode: category.colorCode,
+                tag: category.tag,
+            });
+        });
         return categoryDTOs;
     }
 
@@ -84,5 +88,24 @@ export class CategoriesService{
         category.deletedAt = new Date();
         this.categoryRepository.save(category);
         return true;
+    }
+    async getCategoriesByFood(id: number): Promise<CategoryDTO[]> {
+        const food = await this.foodRepository.findOne({
+            where: {id: id},
+            relations: ['categories'],
+        });
+        if (!food){
+            throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+        }
+        const categoryDTOs: CategoryDTO[] = [];
+        food.categories.map(category => {
+            categoryDTOs.push({
+                id: category.id,
+                name: category.name,
+                colorCode: category.colorCode,
+                tag: category.tag,
+            });
+        });
+        return categoryDTOs;
     }
 }

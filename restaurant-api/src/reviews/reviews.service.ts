@@ -6,13 +6,16 @@ import { Food } from 'src/foods/entity/food.entity';
 import { ReviewDto } from './dto/review.dto';
 import { plainToClass } from 'class-transformer';
 import { User } from 'src/users/entity/user.entity';
+import { CategoryDTO } from '../categories/dto/category.dto';
+import { CategoriesService } from 'src/categories/categories.service';
 
 @Injectable()
 export class ReviewsService {
     constructor(
         @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
         @InjectRepository(Food) private readonly foodRepository: Repository<Food>,
-        @InjectRepository(User) private readonly userRepository: Repository<User>
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        private readonly categoryService: CategoriesService,
     ) {}
 
     async getReviews(foodId: number): Promise<ReviewDto[]> {
@@ -28,8 +31,18 @@ export class ReviewsService {
         if(!food.reviews) {
             return [];
         }
-        const foodDtos = food.reviews.map(review => plainToClass(ReviewDto, review));
-        return foodDtos;
+        const reviews: ReviewDto[] = [];
+        food.reviews.map(review => {
+            reviews.push({
+                id: review.id,
+                rating: review.rating,
+                comment: review.comment,
+                userId: review.user.id,
+                foodId: review.food.id,
+                username: review.user.username,
+            })
+        });
+        return reviews;
     }
 
     async createReview(foodId: number, reviewDto: ReviewDto): Promise<ReviewDto> {
@@ -116,7 +129,33 @@ export class ReviewsService {
         if (!review) {
             throw new HttpException('Review not found', HttpStatus.NOT_FOUND);
         }
-        return plainToClass(ReviewDto, review);
+        const rating = await this.calculateAverageRating(review.food.id);
+        const categorieDTOs = await this.categoryService.getCategoriesByFood(review.food.id);
+        return {
+            id: review.id,
+            user: {
+                id: review.user.id,
+                username: review.user.username,
+                role: review.user.role,
+            },
+            food: {
+                id: review.food.id,
+                name: review.food.name,
+                price: review.food.price,
+                description: review.food.description,
+                images: review.food.images.map(image => {
+                    return {
+                        id: image.id,
+                        url: image.url,
+                        isMain: image.isMain,
+                    }
+                }),
+                categories: categorieDTOs,
+                rating: rating,
+            },
+            rating: review.rating,
+            comment: review.comment,
+        }as ReviewDto;
     }
 
     async getReviewsByUserId(userId: number): Promise<ReviewDto[]> {

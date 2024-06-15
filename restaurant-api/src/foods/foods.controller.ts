@@ -94,7 +94,7 @@ export class FoodsController {
         }
     }
 
-    @Get('/popluar/:limit')
+    @Get('/popular/:limit')
     @Public()
     async getPopularFoods(@Param('limit') limit: number){
         try{

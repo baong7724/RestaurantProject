@@ -11,10 +11,11 @@ import { Category } from 'src/categories/entity/category.entity';
 import { Image } from 'src/images/entity/image.entity';
 import { ImagesService } from 'src/images/images.service';
 import { CategoriesModule } from 'src/categories/categories.module';
+import { Feedback } from 'src/feedbacks/entity/feedback.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Food, Category, Image, Review, User]),
+    TypeOrmModule.forFeature([Food, Category, Image, Review, User, Feedback]),
   ],
   controllers: [ReviewsController],
   providers: [FoodsService, ReviewsService, UsersService, ImagesService, CategoriesModule],

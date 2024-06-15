@@ -38,6 +38,8 @@ export class ReviewsController {
 
     @Put(':foodId/:reviewId')
     @Roles(Role.USER)
+    @ApiBearerAuth('JWT-auth')
+
     async updateReview(
         @Param('foodId') foodId: number,
         @Param('reviewId') reviewId: number,
@@ -55,6 +57,8 @@ export class ReviewsController {
 
     @Delete(':foodId/:reviewId')
     @Roles(Role.USER, Role.ADMIN)
+    @ApiBearerAuth('JWT-auth')
+
     async deleteReview(
         @Param('foodId') foodId: number,
         @Param('reviewId') reviewId: number): Promise<ResponseData<boolean>> {

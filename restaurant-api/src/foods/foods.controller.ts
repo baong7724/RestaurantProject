@@ -25,6 +25,7 @@ export class FoodsController {
 
     @Post()
     @Roles(Role.ADMIN)
+    @ApiBearerAuth('JWT-auth')
     async createFood(@Body() createFoodDTO: FoodDto): Promise<ResponseData<FoodDto>>{
         try{
             const food = await this.foodsService.createFood(createFoodDTO);
@@ -39,6 +40,7 @@ export class FoodsController {
 
     @Put(':id')
     @Roles(Role.ADMIN)
+    @ApiBearerAuth('JWT-auth')
     async updateFood(
         @Param('id') id: number,
         @Body() updateFoodDTO: FoodDto): Promise<ResponseData<FoodDto>>{
@@ -55,6 +57,7 @@ export class FoodsController {
 
     @Put(':foodId/images/:imageId')
     @Roles(Role.ADMIN)
+    @ApiBearerAuth('JWT-auth')
     async updateImage(
         @Param('foodId') foodId: number,
         @Param('imageId') imageId: number,

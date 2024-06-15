@@ -18,6 +18,7 @@ export class CategoriesController {
 
     @Post()
     @Roles(Role.ADMIN)
+    @ApiBearerAuth('JWT-auth')
     async createCategory(@Body() createCategoryDTO: CategoryDTO){
         try {
             const result = await this.categoryService.createCategory(createCategoryDTO)
@@ -32,6 +33,7 @@ export class CategoriesController {
 
     @Put(':id')
     @Roles(Role.ADMIN)
+    @ApiBearerAuth('JWT-auth')
     async updateCategory(
         @Param('id') id: number,
         @Body() updateCategoryDTO: CategoryDTO){
@@ -65,6 +67,7 @@ export class CategoriesController {
 
     @Get(':id')
     @Roles(Role.ADMIN)
+    @ApiBearerAuth('JWT-auth')
     async getCategoryById(@Param('id') id: number){
         try {
             const result = await this.categoryService.getCategoryById(id);
@@ -79,6 +82,7 @@ export class CategoriesController {
 
     @Delete(':id')
     @Roles(Role.ADMIN)
+    @ApiBearerAuth('JWT-auth')
     async deleteCategory(@Param('id') id: number){
         try {
             const result = await this.categoryService.deleteCategory(id);

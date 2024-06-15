@@ -11,6 +11,8 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { table } from 'console';
+import { ViewsModule } from './views/views.module';
+import { FeedbacksModule } from './feedbacks/feedbacks.module';
 import path from 'path';
 
 @Module({
@@ -34,7 +36,7 @@ import path from 'path';
       }
     }),
     inject: [ConfigService],
-  }), CategoriesModule, FoodsModule, ImagesModule, ReviewsModule, UsersModule, AuthModule],
+  }), CategoriesModule, FoodsModule, ImagesModule, ReviewsModule, UsersModule, AuthModule, ViewsModule, FeedbacksModule],
   controllers: [AppController],
   providers: [AppService],
 })

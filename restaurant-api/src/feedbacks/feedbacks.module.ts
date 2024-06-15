@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common';
-import { CategoriesController } from './categories.controller';
-import { Category } from './entity/category.entity';
+import { FeedbacksController } from './feedbacks.controller';
+import { FeedbacksService } from './feedbacks.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CategoriesService } from './categories.service';
+import { Feedback } from './entity/feedback.entity';
 import { Food } from 'src/foods/entity/food.entity';
+import { Category } from 'src/categories/entity/category.entity';
 import { Review } from 'src/reviews/entity/review.entity';
 import { User } from 'src/users/entity/user.entity';
 import { Image } from 'src/images/entity/image.entity';
-import { Feedback } from 'src/feedbacks/entity/feedback.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Food, Category, Image, Review, User, Feedback]),
-],
-  controllers: [CategoriesController],
-  providers: [CategoriesService],
-  exports: [CategoriesService],
+  ],
+  controllers: [FeedbacksController],
+  providers: [FeedbacksService]
 })
-export class CategoriesModule {}
+export class FeedbacksModule {}
